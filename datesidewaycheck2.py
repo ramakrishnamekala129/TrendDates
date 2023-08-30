@@ -103,7 +103,8 @@ def maindaydata2():
             df=pd.DataFrame(j['d']['Data'])
 
             # Merge the current DataFrame with the merged DataFrame
-            merged_df = pd.concat([merged_df, df], ignore_index=True)
+            if not df.empty:
+                merged_df = pd.concat([merged_df, df], ignore_index=True)
     
         # Increase the current date by one day
         current_date += pd.DateOffset(days=1)
