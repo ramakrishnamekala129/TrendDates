@@ -40,90 +40,174 @@ def maindaydata2():
     import pandas as pd
     import requests
     global start_date,end_date
-    
-    # Define the base URL
-    base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
-    today = end_date
-    pastdate=start_date
-    # Format today's date as 'YYYY-MM-DD'
-    formatted_date = today.strftime('%Y-%m-%d')
+    try:
+        # Define the base URL
+        base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
 
-    formatted_date1 = pastdate.strftime('%Y-%m-%d')
-    # Define the start and end dates for the loop
-    start_date = pd.Timestamp(formatted_date1)
-    end_date = pd.Timestamp(formatted_date)
-    
-    # Initialize an empty DataFrame to store the merged data
-    merged_df = pd.DataFrame()
-    
-    # Loop through the dates
-    current_date = start_date
-    while current_date <= end_date:
-        # Format the date into the desired string format
-        date_str = current_date.strftime('%Y%m%d')
-        print(date_str)
-    
-        # Construct the URL for the current date
-        #url = base_url + date_str + '.csv'
-    
-        # Send a GET request to the URL
-        headers = {
-            'Accept': 'application/json, text/javascript, */*; q=0.01',
-            'Accept-Language': 'en-US,en;q=0.9',
-            'Connection': 'keep-alive',
-            'Content-Type': 'application/json',
-            'Origin': 'https://www.mcxindia.com',
-            'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
-            'Sec-Fetch-Dest': 'empty',
-            'Sec-Fetch-Mode': 'cors',
-            'Sec-Fetch-Site': 'same-origin',
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
-            'X-Requested-With': 'XMLHttpRequest',
-            'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-        }
-        a="{'Date':'"
-        b="','InstrumentName':'ALL'}"
-        c=a+date_str+b
-        #print(c)
-        data=c
-        #data = "{'Date':'20230524','InstrumentName':'ALL'}"
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
         
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%Y%m%d')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            #url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json',
+                'Origin': 'https://www.mcxindia.com',
+                'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+            a="{'Date':'"
+            b="','InstrumentName':'ALL'}"
+            c=a+date_str+b
+            #print(c)
+            data=c
+            #data = "{'Date':'20230524','InstrumentName':'ALL'}"
+            
 
-        response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy',  headers=headers, data=data)
+            response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy',  headers=headers, data=data)
 
-        # Check the status code
-        print(response.status_code)
-        if response.status_code == 200:
-            # Read the CSV data into a DataFrame
-            print('done')
-            j=response.json()
+            # Check the status code
+            print(response.status_code)
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                j=response.json()
 
-            df=pd.DataFrame(j['d']['Data'])
+                df=pd.DataFrame(j['d']['Data'])
 
-            # Merge the current DataFrame with the merged DataFrame
-            if not df.empty:
-                merged_df = pd.concat([merged_df, df], ignore_index=True)
+                # Merge the current DataFrame with the merged DataFrame
+                if not df.empty:
+                    merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        #print(merged_df.columns)
+        merged_df=merged_df[merged_df['OptionType']=='-']
+        
+        merged_df['Date']=pd.to_datetime(merged_df['Date'],dayfirst=False,yearfirst=False)
+        merged_df['Name']=merged_df['Symbol']+merged_df['ExpiryDate']
+        merged_df['Open']=merged_df['Open'].astype(float)
+        merged_df['High']=merged_df['High'].apply(float)
+        merged_df['Low']=merged_df['Low'].apply(float)
+        merged_df['Close']=merged_df['Close'].apply(float)
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name','Symbol']]
+        return merged_df
+
+    except:
+        base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
+
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
+        
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%Y%m%d')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            #url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json',
+                'Origin': 'https://www.mcxindia.com',
+                'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+            a="{'Date':'"
+            b="','InstrumentName':'ALL'}"
+            c=a+date_str+b
+            #print(c)
+            data=c
+            #data = "{'Date':'20230524','InstrumentName':'ALL'}"
+            
+
+            response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy',  headers=headers, data=data)
+
+            # Check the status code
+            print(response.status_code)
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                j=response.json()
+
+                df=pd.DataFrame(j['d']['Data'])
+
+                # Merge the current DataFrame with the merged DataFrame
+                if not df.empty:
+                    merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        #print(merged_df.columns)
+        merged_df=merged_df[merged_df['OptionType']=='-']
+        
+        merged_df['Date']=pd.to_datetime(merged_df['Date'],dayfirst=False,yearfirst=False)
+        merged_df['Name']=merged_df['Symbol']+merged_df['ExpiryDate']
+        merged_df['Open']=merged_df['Open'].astype(float)
+        merged_df['High']=merged_df['High'].apply(float)
+        merged_df['Low']=merged_df['Low'].apply(float)
+        merged_df['Close']=merged_df['Close'].apply(float)
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name','Symbol']]
+        return merged_df
+
+        pass
+
     
-        # Increase the current date by one day
-        current_date += pd.DateOffset(days=1)
-        print(current_date)
-    
-    # Print the merged DataFrame
-    #print(merged_df.columns)
-    merged_df=merged_df[merged_df['OptionType']=='-']
-    
-    merged_df['Date']=pd.to_datetime(merged_df['Date'],dayfirst=False,yearfirst=False)
-    merged_df['Name']=merged_df['Symbol']+merged_df['ExpiryDate']
-    merged_df['Open']=merged_df['Open'].astype(float)
-    merged_df['High']=merged_df['High'].apply(float)
-    merged_df['Low']=merged_df['Low'].apply(float)
-    merged_df['Close']=merged_df['Close'].apply(float)
-    merged_df=merged_df[['Date','Open','High','Low','Close','Name','Symbol']]
-    #df=merged_df[merged_df['Name']==sym]
-    return merged_df
-
 if option1=='NSE':
     dr=pd.read_csv('sec_bhavdata_full_23082023.csv')
     symbol=list(dr['SYMBOL'])
@@ -139,120 +223,232 @@ def maindaydata():
     import pandas as pd
     import requests
     global start_date,end_date
-    
-    # Define the base URL
-    base_url = 'https://archives.nseindia.com/content/indices/ind_close_all_'
-    today = end_date
-    pastdate=start_date
-    # Format today's date as 'YYYY-MM-DD'
-    formatted_date = today.strftime('%Y-%m-%d')
+    nifty50,niftybank=pd.DataFrame(),pd.DataFrame()
+    try:
+        # Define the base URL
+        base_url = 'https://archives.nseindia.com/content/indices/ind_close_all_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
 
-    formatted_date1 = pastdate.strftime('%Y-%m-%d')
-    # Define the start and end dates for the loop
-    start_date = pd.Timestamp(formatted_date1)
-    end_date = pd.Timestamp(formatted_date)
-    
-    # Initialize an empty DataFrame to store the merged data
-    merged_df = pd.DataFrame()
-    
-    # Loop through the dates
-    current_date = start_date
-    while current_date <= end_date:
-        # Format the date into the desired string format
-        date_str = current_date.strftime('%d%m%Y')
-        print(date_str)
-    
-        # Construct the URL for the current date
-        url = base_url + date_str + '.csv'
-    
-        # Send a GET request to the URL
-        response = requests.get(url, allow_redirects=False)
-    
-        # Check the status code
-        if response.status_code == 200:
-            # Read the CSV data into a DataFrame
-            print('done')
-            df = pd.read_csv(url)
-    
-            # Merge the current DataFrame with the merged DataFrame
-            merged_df = pd.concat([merged_df, df], ignore_index=True)
-    
-        # Increase the current date by one day
-        current_date += pd.DateOffset(days=1)
-        print(current_date)
-    
-    # Print the merged DataFrame
-    merged_df=merged_df[merged_df['Open Index Value']!='-']
-    merged_df['Date']=pd.to_datetime(merged_df['Index Date'],dayfirst=True)
-    merged_df['Open']=merged_df['Open Index Value'].astype(float)
-    merged_df['High']=merged_df['High Index Value'].apply(float)
-    merged_df['Low']=merged_df['Low Index Value'].apply(float)
-    merged_df['Close']=merged_df['Closing Index Value'].apply(float)
-    merged_df['Name']=merged_df['Index Name']
-    merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
-    nifty50=merged_df[merged_df['Name']=='Nifty 50']
-    niftybank=merged_df[merged_df['Name']=='Nifty Bank']
-    return nifty50,niftybank
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
+        
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%d%m%Y')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            response = requests.get(url, allow_redirects=False)
+        
+            # Check the status code
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                df = pd.read_csv(url)
+        
+                # Merge the current DataFrame with the merged DataFrame
+                merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        merged_df=merged_df[merged_df['Open Index Value']!='-']
+        merged_df['Date']=pd.to_datetime(merged_df['Index Date'],dayfirst=True)
+        merged_df['Open']=merged_df['Open Index Value'].astype(float)
+        merged_df['High']=merged_df['High Index Value'].apply(float)
+        merged_df['Low']=merged_df['Low Index Value'].apply(float)
+        merged_df['Close']=merged_df['Closing Index Value'].apply(float)
+        merged_df['Name']=merged_df['Index Name']
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
+        nifty50=merged_df[merged_df['Name']=='Nifty 50']
+        niftybank=merged_df[merged_df['Name']=='Nifty Bank']
+        return nifty50,niftybank
+    except:
+        base_url = 'https://archives.nseindia.com/content/indices/ind_close_all_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
+
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
+        
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%d%m%Y')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            response = requests.get(url, allow_redirects=False)
+        
+            # Check the status code
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                df = pd.read_csv(url)
+        
+                # Merge the current DataFrame with the merged DataFrame
+                merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        merged_df=merged_df[merged_df['Open Index Value']!='-']
+        merged_df['Date']=pd.to_datetime(merged_df['Index Date'],dayfirst=True)
+        merged_df['Open']=merged_df['Open Index Value'].astype(float)
+        merged_df['High']=merged_df['High Index Value'].apply(float)
+        merged_df['Low']=merged_df['Low Index Value'].apply(float)
+        merged_df['Close']=merged_df['Closing Index Value'].apply(float)
+        merged_df['Name']=merged_df['Index Name']
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
+        nifty50=merged_df[merged_df['Name']=='Nifty 50']
+        niftybank=merged_df[merged_df['Name']=='Nifty Bank']
+        return nifty50,niftybank
+        pass
+    #return nifty50,niftybank
 
 
 def maindaydata1(sym):
     import pandas as pd
+    df=pd.DataFrame()
     import requests
     global start_date,end_date
-    
-    # Define the base URL
-    base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
-    today = end_date
-    pastdate=start_date
-    # Format today's date as 'YYYY-MM-DD'
-    formatted_date = today.strftime('%Y-%m-%d')
+    try:
+        # Define the base URL
+        base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
 
-    formatted_date1 = pastdate.strftime('%Y-%m-%d')
-    # Define the start and end dates for the loop
-    start_date = pd.Timestamp(formatted_date1)
-    end_date = pd.Timestamp(formatted_date)
-    
-    # Initialize an empty DataFrame to store the merged data
-    merged_df = pd.DataFrame()
-    
-    # Loop through the dates
-    current_date = start_date
-    while current_date <= end_date:
-        # Format the date into the desired string format
-        date_str = current_date.strftime('%d%m%Y')
-        print(date_str)
-    
-        # Construct the URL for the current date
-        url = base_url + date_str + '.csv'
-    
-        # Send a GET request to the URL
-        response = requests.get(url, allow_redirects=False)
-    
-        # Check the status code
-        if response.status_code == 200:
-            # Read the CSV data into a DataFrame
-            print('done')
-            df = pd.read_csv(url)
-    
-            # Merge the current DataFrame with the merged DataFrame
-            merged_df = pd.concat([merged_df, df], ignore_index=True)
-    
-        # Increase the current date by one day
-        current_date += pd.DateOffset(days=1)
-        print(current_date)
-    
-    # Print the merged DataFrame
-    #print(merged_df.columns)
-    merged_df=merged_df[merged_df[' OPEN_PRICE']!='-']
-    merged_df['Date']=pd.to_datetime(merged_df[' DATE1'],dayfirst=True)
-    merged_df['Open']=merged_df[' OPEN_PRICE'].astype(float)
-    merged_df['High']=merged_df[' HIGH_PRICE'].apply(float)
-    merged_df['Low']=merged_df[' LOW_PRICE'].apply(float)
-    merged_df['Close']=merged_df[' CLOSE_PRICE'].apply(float)
-    merged_df['Name']=merged_df['SYMBOL']
-    merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
-    df=merged_df[merged_df['Name']==sym]
-    return df
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
+        
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%d%m%Y')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            response = requests.get(url, allow_redirects=False)
+        
+            # Check the status code
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                df = pd.read_csv(url)
+        
+                # Merge the current DataFrame with the merged DataFrame
+                merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        #print(merged_df.columns)
+        merged_df=merged_df[merged_df[' OPEN_PRICE']!='-']
+        merged_df['Date']=pd.to_datetime(merged_df[' DATE1'],dayfirst=True)
+        merged_df['Open']=merged_df[' OPEN_PRICE'].astype(float)
+        merged_df['High']=merged_df[' HIGH_PRICE'].apply(float)
+        merged_df['Low']=merged_df[' LOW_PRICE'].apply(float)
+        merged_df['Close']=merged_df[' CLOSE_PRICE'].apply(float)
+        merged_df['Name']=merged_df['SYMBOL']
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
+        df=merged_df[merged_df['Name']==sym]
+        return df
+    except:
+        base_url = 'https://archives.nseindia.com/products/content/sec_bhavdata_full_'
+        today = end_date
+        pastdate=start_date
+        # Format today's date as 'YYYY-MM-DD'
+        formatted_date = today.strftime('%Y-%m-%d')
+
+        formatted_date1 = pastdate.strftime('%Y-%m-%d')
+        # Define the start and end dates for the loop
+        start_date = pd.Timestamp(formatted_date1)
+        end_date = pd.Timestamp(formatted_date)
+        
+        # Initialize an empty DataFrame to store the merged data
+        merged_df = pd.DataFrame()
+        
+        # Loop through the dates
+        current_date = start_date
+        while current_date <= end_date:
+            # Format the date into the desired string format
+            date_str = current_date.strftime('%d%m%Y')
+            print(date_str)
+        
+            # Construct the URL for the current date
+            url = base_url + date_str + '.csv'
+        
+            # Send a GET request to the URL
+            response = requests.get(url, allow_redirects=False)
+        
+            # Check the status code
+            if response.status_code == 200:
+                # Read the CSV data into a DataFrame
+                print('done')
+                df = pd.read_csv(url)
+        
+                # Merge the current DataFrame with the merged DataFrame
+                merged_df = pd.concat([merged_df, df], ignore_index=True)
+        
+            # Increase the current date by one day
+            current_date += pd.DateOffset(days=1)
+            print(current_date)
+        
+        # Print the merged DataFrame
+        #print(merged_df.columns)
+        merged_df=merged_df[merged_df[' OPEN_PRICE']!='-']
+        merged_df['Date']=pd.to_datetime(merged_df[' DATE1'],dayfirst=True)
+        merged_df['Open']=merged_df[' OPEN_PRICE'].astype(float)
+        merged_df['High']=merged_df[' HIGH_PRICE'].apply(float)
+        merged_df['Low']=merged_df[' LOW_PRICE'].apply(float)
+        merged_df['Close']=merged_df[' CLOSE_PRICE'].apply(float)
+        merged_df['Name']=merged_df['SYMBOL']
+        merged_df=merged_df[['Date','Open','High','Low','Close','Name']]
+        df=merged_df[merged_df['Name']==sym]
+        return df
+        pass
+        #return df
 
 if option1=='NSE':
     if option in ['NIFTY BANK','NIFTY 50']:
