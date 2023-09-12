@@ -24,7 +24,7 @@ with col1:
 with col2:
     input_days=st.number_input(label='Days For Calucation',value=30,min_value=1,max_value=30)
 with col3:
-    option1 = st.selectbox('Indian EXCHANGE',['NSE','MCX','Index'])
+    option1 = st.selectbox('Indian EXCHANGE',['NSE','MCX','Index','CDS'])
 start_date=selected_date-timedelta(days=25)
 end_date=selected_date-timedelta(days=1)
 start_date1=start_date
@@ -119,10 +119,73 @@ elif option1=='MCX':
     #data = "{'Date':'20230524','InstrumentName':'ALL'}"
 
 
-    response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy',  headers=headers, data=data)
+    #response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy',  headers=headers, data=data)
 
     df=pd.DataFrame()
-    df=(pd.DataFrame(response.json()['d']['Data']))
+    #df=(pd.DataFrame(response.json()['d']['Data']))
+    
+    base_url = 'https://www.mcxindia.com/'
+    #start_date = datetime.date(2023, 5, 1)  # Modify this to your desired start date
+
+    # Define a function to check if a date is a weekend (Saturday or Sunday)
+    def is_weekend(date):
+        return date.weekday() >= 5  # 5 represents Saturday, 6 represents Sunday
+
+    # Initialize an empty DataFrame to store the results
+    result_df = pd.DataFrame()
+
+    # Loop through dates
+    current_date = selected_date
+    while True:
+        # Check if the current date is a weekend, and if not, proceed with the request
+        if not is_weekend(current_date):
+            date_str = current_date.strftime('%Y%m%d')
+            print(date_str)
+
+            # Construct the URL for the current date
+            url = base_url + date_str + '.csv'
+            
+            # Send a GET request to the URL
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json',
+                'Origin': 'https://www.mcxindia.com',
+                'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+
+            data = {
+                'Date': date_str,
+                'InstrumentName': 'ALL'
+            }
+
+            response = requests.post('https://www.mcxindia.com/backpage.aspx/GetDateWiseBhavCopy', headers=headers, json=data)
+
+            if response.status_code == 200:
+                # Process the response data and append it to result_df
+                df = pd.DataFrame(response.json()['d']['Data'])
+                #result_df = pd.concat([result_df, current_data], ignore_index=True)
+            else:
+                print(f"Failed to fetch data for date: {date_str}")
+
+        # Move to the next day
+        current_date -= datetime.timedelta(days=1)
+
+        # Stop the loop if you have fetched enough data or reached a specific end date
+        if len(df) >0:
+            break
+
+
+
     #st.dataframe(df)
     if not df.empty:
         df=df[df['OptionType']=='-']
@@ -131,6 +194,88 @@ elif option1=='MCX':
         with col2:
             expiry = st.selectbox('Expiry ',df1)
         #st.write(expiry)
+elif option1=='CDS':
+    symbols=['USDINR',"EURINR",'EURUSD','GBPINR','GBPUSD','JPYINR','USDJPY']
+    col1, col2 = st.columns(2)
+    with col1:
+        option = st.selectbox('Symbol ',symbols)
+        
+    import requests
+    from datetime import datetime
+    cookies = {
+
+    }
+
+    headers = {
+        'authority': 'www.nseindia.com',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'accept-language': 'en-US,en;q=0.9',
+        'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'document',
+        'sec-fetch-mode': 'navigate',
+        'sec-fetch-site': 'none',
+        'sec-fetch-user': '?1',
+        'upgrade-insecure-requests': '1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+    }
+    
+    # initialize a session
+    session = requests.Session()
+    
+    # send a get request to the server
+    response = session.get('https://www.nseindia.com/',cookies=cookies,
+    headers=headers,)
+    # print the response dictionary
+    maincookie=(session.cookies.get_dict())
+
+
+
+    headers = {
+        'authority': 'www.nseindia.com',
+        'accept': '*/*',
+        'accept-language': 'en-US,en;q=0.9',
+        # 'cookie': 'defaultLang=en; nseQuoteSymbols=[{"symbol":"SADBHAV","identifier":null,"type":"equity"},{"symbol":"ADANIENT","identifier":null,"type":"equity"},{"symbol":"ADANIGREEN","identifier":null,"type":"equity"},{"symbol":"NIFTY","identifier":null,"type":"equity"}]; AKA_A2=A; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQwODU1NiwiZXhwIjoxNjk0NDE1NzU2fQ.ebT17XQgpxeSz7cyvBWOODnJbzEZzuS4Hnslf-TILFI; _ga=GA1.2.1632056446.1694146307; _ga_PJSKY6CFJH=GS1.1.1694407204.15.1.1694408663.2.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQJSEPF9t9p06KAQAA8sSjghWFr3CTe4AtbxCx91PDLY9HgwAvuacw2fxHpNbC8Yghjbc9Thr5HHVbyj9WYQ9DcZ59g78Y6GO8eH7tRmggidrTNCacWj+TI8LoaZik98EW+rwaBjdS8ExSN3xHtJkgd6ss8+CMM5hCbWWB3aZg2E8hHqsMrRtR9wivZSvmgfrigN6S31M2mTNlw0JPL/n95CAZd+0/7PA1TTfBwNpaS6CpIwV0tzibq+nV4IiCLeb8zg==~1',
+        'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+        'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+        'sec-ch-ua-mobile': '?0',
+        'sec-ch-ua-platform': '"Windows"',
+        'sec-fetch-dest': 'empty',
+        'sec-fetch-mode': 'cors',
+        'sec-fetch-site': 'same-origin',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+    }
+
+    params = {
+        'instrument': 'FUTCUR',
+        'symbol': option,
+        'year': str(selected_date.year),
+    }
+
+    response = requests.get(
+        'https://www.nseindia.com/api/historical/cdCPV/expireDtsv2',
+        params=params,
+        cookies=maincookie,
+        headers=headers,
+    )
+
+
+    selected_date1 = datetime.combine(selected_date, datetime.min.time())
+    def custom_key(date_str):
+        return datetime.strptime(date_str, '%d-%b-%Y')
+
+    # Sort the list using the custom key function
+    #sorted_dates = sorted(response.json()['expireDts'], key=custom_key)
+    upcoming_dates = [date for date in response.json()['expireDts'] if custom_key(date) >= selected_date1]
+
+    # Sort the upcoming dates
+    sorted_upcoming_dates = sorted(upcoming_dates, key=custom_key)
+
+    with col2:
+        expiry = st.selectbox('Expiry ',sorted_upcoming_dates)
+
+
 
     
 #with col1:
@@ -517,10 +662,50 @@ with tab1:
         df['Close']=df['Close'].apply(float)
         df=df[['Date','Open','High','Low','Close','Name','Symbol']]
         df=df.iloc[::-1]
+    elif option1=='CDS':
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            # 'cookie': 'defaultLang=en; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; _ga=GA1.1.1632056446.1694146307; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQxMzA3MSwiZXhwIjoxNjk0NDIwMjcxfQ.JOM8PC7cwUVZXqdV5AoWhoY6GYJeahOjP_MXXQZ_Z3s; AKA_A2=A; _ga_PJSKY6CFJH=GS1.1.1694412311.16.1.1694413071.59.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQZSdzaKHgM0uKAQAAkezjghVD7q8MmpuNfVKCm1OChebtjPo3+xJ4QhMJzLXU5tbI138YGsGnE58h+/C/YVd4/iM4d1xMdbtfj7xMQPlmXI7PErPNQRgugwK79JYkHdW0cZjiFtGvn9YxTTr2AIv3XxAReCS8xJJjsZoaot7BEo191/HldmreN4W59We/U9nM6+210CC4XxKuq/th6fLdAEAsmju8zZX+bGsY00g7N4LvZEd7hUDy/macfuDB+o/0FA==~1',
+            'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+
+        params = {
+            'from': start_date.strftime('%d-%m-%Y'),
+            'to': end_date.strftime('%d-%m-%Y'),
+            'instrumentType': 'FUTCUR',
+            'symbol': option,
+            'year': str(selected_date.year),
+            'expiryDate': expiry,
+        }
+        print(params)
+        response = requests.get('https://www.nseindia.com/api/historical/cdCPV', params=params, cookies=maincookie, headers=headers)
+        d=response.json()
+        df=(pd.DataFrame(d['data']))
+                
+        df['Date']=df['CD_TIMESTAMP']
+        df['Date']=pd.to_datetime(df['Date'])
+        df['High']=df['CD_TRADE_HIGH_PRICE'].astype(float)*1000
+        df['Low']=df['CD_TRADE_LOW_PRICE'].astype(float)*1000
+        df['Close']=df['CD_CLOSING_PRICE'].astype(float)*1000
+        df['Open']=df['CD_OPENING_PRICE'].astype(float)*1000
+        df['Symbol']=df['CD_SYMBOL']
+        df=df[['Date','Open','High','Low','Close','Symbol']]
+        df=df.iloc[::-1]
 
 
 
-    df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)
+
+
+    df['Date']=pd.to_datetime(df['Date'])#,dayfirst=False,yearfirst=False)
     #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
     df['Open']=df['Open'].astype(float)
     df['High']=df['High'].apply(float)
@@ -1262,6 +1447,83 @@ with tab2:
 
     #st.dataframe(df)
     #
+    elif option1=='CDS':
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            # 'cookie': 'defaultLang=en; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; _ga=GA1.1.1632056446.1694146307; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQxMzA3MSwiZXhwIjoxNjk0NDIwMjcxfQ.JOM8PC7cwUVZXqdV5AoWhoY6GYJeahOjP_MXXQZ_Z3s; AKA_A2=A; _ga_PJSKY6CFJH=GS1.1.1694412311.16.1.1694413071.59.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQZSdzaKHgM0uKAQAAkezjghVD7q8MmpuNfVKCm1OChebtjPo3+xJ4QhMJzLXU5tbI138YGsGnE58h+/C/YVd4/iM4d1xMdbtfj7xMQPlmXI7PErPNQRgugwK79JYkHdW0cZjiFtGvn9YxTTr2AIv3XxAReCS8xJJjsZoaot7BEo191/HldmreN4W59We/U9nM6+210CC4XxKuq/th6fLdAEAsmju8zZX+bGsY00g7N4LvZEd7hUDy/macfuDB+o/0FA==~1',
+            'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+
+        params = {
+            'from': start_date.strftime('%d-%m-%Y'),
+            'to': end_date.strftime('%d-%m-%Y'),
+            'instrumentType': 'FUTCUR',
+            'symbol': option,
+            'year': str(selected_date.year),
+            'expiryDate': expiry,
+        }
+
+        response = requests.get('https://www.nseindia.com/api/historical/cdCPV', params=params, cookies=maincookie, headers=headers)
+        d=response.json()
+        df=(pd.DataFrame(d['data']))
+                
+        df['Date']=df['CD_TIMESTAMP']
+        df['Date']=pd.to_datetime(df['Date'])
+        df['High']=df['CD_TRADE_HIGH_PRICE'].astype(float)*1000
+        df['Low']=df['CD_TRADE_LOW_PRICE'].astype(float)*1000
+        df['Close']=df['CD_CLOSING_PRICE'].astype(float)*1000
+        df['Open']=df['CD_OPENING_PRICE'].astype(float)*1000
+        df['Symbol']=df['CD_SYMBOL']
+        df=df[['Date','Open','High','Low','Close','Symbol']]
+        df=df.iloc[::-1]
+
+        df=df.drop_duplicates()
+
+        
+        df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)
+        #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+        df = df.sort_values(by='Date', ascending=True)
+        df11=df
+        df['DailyRange']=df['High']-df['Low']
+        df['avg']=(df['Open']+df['Close'])/2
+        df=df.iloc[-10:]
+        #st.write(f'dailyavg mean is {df['DailyRange'].mean()}')
+        #st.dataframe(df)
+        #st.write(f'avg mean is {df['avg'].mean()}')
+        vola=(df['DailyRange'].mean()/df['avg'].mean())
+        vola100=vola*100
+        vola365=vola100*math.sqrt(365)
+        lastclose=df['Close'].iloc[-1]
+        
+        lastclose=st.number_input(label='Current Ohlcv Drift Input Price',value=lastclose,min_value=0.0,max_value=100000.0)
+        multiday=(lastclose*vola365/100*(math.sqrt(input_days)))/math.sqrt(365)
+        multiday=st.number_input(label='Price Range',value=multiday,min_value=0.0,max_value=100000.0)
+    
+        fibs=[0.236,0.382,0.5,0.618,0.786,0.888,1,1.236,1.618]
+        ldf=pd.DataFrame()
+        ldf['ratios']=fibs
+        ldf.index=ldf['ratios']
+        ldf['w']=ldf['ratios']*multiday
+
+        ldf['Buy']=ldf['w']+lastclose
+        ldf['Sell']=lastclose-ldf['w']
+        col1,col2=st.columns(2)
+        multiday=round(multiday,2)
+        with col1:
+            st.header('OHLC Method')
+        with col2:
+            st.header(f'Price Range ( {multiday} )')
+        
+        st.dataframe(ldf)
 
 
      
