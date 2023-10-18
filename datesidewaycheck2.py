@@ -284,7 +284,7 @@ elif option1=='CDS':
 #with col2:
 #    end_date = st.date_input('Select End date',end_date)
 
-tab1, tab2, tab3 = st.tabs(["Dates", "Fibo","Cycles"])
+tab1, tab2, tab3 ,tab4,tab5= st.tabs(["Dates", "Fibo","TOPs & Bottoms","Cycles","Lunar Shift"])
 
 #d = date(2023, 8, 6)
 
@@ -784,6 +784,10 @@ with tab1:
      mindate1.date(),mindate2.date(),mindate3.date(),mindate_1.date(),mindate_2.date(),mindate_3.date()]
     print('1st method')
     print(h1)
+    h1_h=[maxdate1.date(),maxdate2.date(),maxdate3.date(),maxdate_1.date(),maxdate_2.date(),maxdate_3.date()]
+    #st.write(h1_h)
+    h1_l=[mindate1.date(),mindate2.date(),mindate3.date(),mindate_1.date(),mindate_2.date(),mindate_3.date()]
+    #st.write(h1_l)
     print('1st end method')
     ##############technique 1 ##h1###################
 
@@ -903,6 +907,7 @@ with tab1:
     #st.write('All Dates for This Month')
     strong=[]
     weak=[]
+    special=[]
     for date, count in sorted_dates:
         #st.write(f"{date.strftime('%d-%B-%Y')}\t{count}")
         #if count >=4:
@@ -919,7 +924,9 @@ with tab1:
            weak.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
         elif int(count) > 1:
            strong.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
-        
+        special.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
+    special=pd.DataFrame(special,columns=['Trend Major Change Date','Trend','Weekday'])
+    
     #print(strong)
     #print(len(strong))
     strong1=pd.DataFrame(strong,columns=['Major Trend Change Date','Major Trend','Major Weekday'])
@@ -939,7 +946,7 @@ with tab1:
         strong2['Major Weekday']=strong1['Major Weekday']
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
-        st.dataframe(strong2)
+        #st.dataframe(strong2)
     else:
         strong2=strong1
         strong2['Minor Trend Change Date']=weak1['Minor Trend Change Date']
@@ -948,8 +955,9 @@ with tab1:
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
         
-        st.dataframe(strong2)
-        #st.write(h5)     
+        #st.dataframe(strong2)
+        #st.write(h5)
+    st.dataframe(special)    
     for i in h2:
         
         if i.month==d1f.month:
@@ -980,6 +988,7 @@ with tab1:
     #st.write('All Dates for This Month')
     strong=[]
     weak=[]
+    special=[]
     for date, count in sorted_dates:
         #st.write(f"{date.strftime('%d-%B-%Y')}\t{count}")
         #if count >=4:
@@ -996,7 +1005,9 @@ with tab1:
            weak.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
         elif int(count) > 1:
            strong.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
-        
+        special.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
+    special=pd.DataFrame(special,columns=['Trend Major Change Date','Trend','Weekday'])
+    
     #print(strong)
     #print(len(strong))
     strong1=pd.DataFrame(strong,columns=['Major Trend Change Date','Major Trend','Major Weekday'])
@@ -1017,7 +1028,7 @@ with tab1:
         strong2['Major Weekday']=strong1['Major Weekday']
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
-        st.dataframe(strong2)
+        #st.dataframe(strong2)
     else:
         strong2=strong1
         strong2['Minor Trend Change Date']=weak1['Minor Trend Change Date']
@@ -1026,8 +1037,9 @@ with tab1:
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
         
-        st.dataframe(strong2)
-        #st.write(h5)     
+        #st.dataframe(strong2)
+        #st.write(h5)  
+    st.dataframe(special)       
     for i in h3:
         
         if i.month==d1f.month:
@@ -1058,6 +1070,7 @@ with tab1:
     #st.write('All Dates for This Month')
     strong=[]
     weak=[]
+    special=[]
     for date, count in sorted_dates:
         #st.write(f"{date.strftime('%d-%B-%Y')}\t{count}")
         #if count >=4:
@@ -1074,7 +1087,8 @@ with tab1:
            weak.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
         elif int(count) > 1:
            strong.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
-        
+        special.append([f"{date.strftime('%d-%B-%Y')}" ,f"{count}",f"{date.strftime('%A')}"]) 
+    special=pd.DataFrame(special,columns=['Trend Change Date','Trend','Weekday'])
     #print(strong)
     #print(len(strong))
     strong1=pd.DataFrame(strong,columns=['Major Trend Change Date','Major Trend','Major Weekday'])
@@ -1095,7 +1109,7 @@ with tab1:
         strong2['Major Weekday']=strong1['Major Weekday']
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
-        st.dataframe(strong2)
+        #st.dataframe(strong2)
     else:
         strong2=strong1
         strong2['Minor Trend Change Date']=weak1['Minor Trend Change Date']
@@ -1104,8 +1118,9 @@ with tab1:
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
         
-        st.dataframe(strong2)
-        #st.write(h5)     
+        #st.dataframe(strong2)
+        #st.write(h5) 
+    st.dataframe(special)        
     for i in h5:
         
         if i.month==d1f.month:
@@ -1164,13 +1179,17 @@ with tab1:
     #st.dataframe(weak1)
     #st.write(len(weak1))
     #st.write(len(strong1))
+    st.write('Combined')
     if len(weak1) > len(strong1):
         strong2=weak1
         strong2['Major Trend Change Date']=strong1['Major Trend Change Date']
         strong2['Major Trend']=strong1['Major Trend']
         strong2['Major Weekday']=strong1['Major Weekday']
         #print(strong2)
+        #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
+        strong2.columns=['Strong Trend Change Date','Strong Trend','Strong Weekday','Major Trend Change Date','Major Trend','Major Weekday']
+        
         st.dataframe(strong2)
     else:
         strong2=strong1
@@ -1179,14 +1198,17 @@ with tab1:
         strong2['Minor Weekday']=weak1['Minor Weekday']
         #print(strong2)
         strong2=strong2[['Major Trend Change Date','Major Trend','Major Weekday','Minor Trend Change Date','Minor Trend','Minor Weekday']]
+        strong2.columns=['Strong Trend Change Date','Strong Trend','Strong Weekday','Major Trend Change Date','Major Trend','Major Weekday']
         
         st.dataframe(strong2)
         #st.write(h5)     
+    
+
 
 
 with tab2:
 
-    syms=['BANKNIFTY','NIFTY']
+    #syms=['BANKNIFTY','NIFTY']
     #o=st.selectbox('Select Symbol :',syms)
     #st.write('Display Symbol is:', o)
     
@@ -1352,7 +1374,10 @@ with tab2:
         df=pd.DataFrame(eval(f['d'])[::-1])
         #df=dr[dr['Name']==option]
         #st.dataframe(df)
-        df['Date']=pd.to_datetime(df['HistoricalDate'],dayfirst=True,yearfirst=False)
+        #df['Date']=pd.to_datetime(df['HistoricalDate'],dayfirst=True,yearfirst=False)
+        df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+
         #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
         df = df.sort_values(by='Date', ascending=True)
         df['Close']=df['CLOSE'].astype(float)
@@ -1526,11 +1551,918 @@ with tab2:
         st.dataframe(ldf)
 
 
-     
-
-
-
 with tab3:
+
+    #syms=['BANKNIFTY','NIFTY']
+    #o=st.selectbox('Select Symbol :',syms)
+    #st.write('Display Symbol is:', o)
+    
+        
+    # create a date picker to select a date
+    
+    # create a list of specific valid dates
+        
+    #nf,bnf,mdf=maindaydata()
+
+
+        
+    print('tabs 2 222222222222222222222')
+    if option1=='NSE':
+        
+                
+        import requests
+
+        cookies = {
+
+        }
+
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'en-US,en;q=0.9',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+        
+        # initialize a session
+        session = requests.Session()
+        
+        # send a get request to the server
+        response = session.get('https://www.nseindia.com/',cookies=cookies,
+        headers=headers,)
+        # print the response dictionary
+        maincookie=(session.cookies.get_dict())
+
+        import requests
+
+        cookies = {
+            
+        }
+
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'en-US,en;q=0.9',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+        start=start_date1.strftime('%d-%m-%Y')
+        end=end_date1.strftime('%d-%m-%Y')
+        response = requests.get(f'https://www.nseindia.com/api/historical/cm/equity?symbol={option}&series=[%22EQ%22]&from={start}&to={end}',
+            cookies=maincookie,
+            headers=headers,
+        )
+
+
+        d=(response.json())
+        df=(pd.DataFrame(d['data']))
+                
+        df['Date']=df['mTIMESTAMP']
+        df['Date']=pd.to_datetime(df['Date'])
+        df['High']=df['CH_TRADE_HIGH_PRICE'].astype(float)
+        df['Low']=df['CH_TRADE_LOW_PRICE'].astype(float)
+        df['Close']=df['CH_CLOSING_PRICE'].astype(float)
+        df['Open']=df['CH_OPENING_PRICE'].astype(float)
+        df['Symbol']=df['CH_SYMBOL']
+        df=df[['Date','Open','High','Low','Close','Symbol']]
+        df=df.iloc[::-1]
+        df1=df
+        #st.dataframe(df)
+
+        df=df.drop_duplicates()
+
+        df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)
+        df = df.sort_values(by='Date', ascending=True)
+        #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+        #df=df.iloc[::-1]
+        df11=df
+        df['DailyRange']=df['High']-df['Low']
+        df['avg']=(df['Open']+df['Close'])/2
+        df=df.iloc[-10:]
+        #st.dataframe(df)
+        #st.write(f'dailyavg mean is {df['DailyRange'].mean()}')
+
+        #st.write(f'avg mean is {df['avg'].mean()}')
+        vola=(df['DailyRange'].mean()/df['avg'].mean())
+        vola100=vola*100
+        vola365=vola100*math.sqrt(365)
+
+        if input_days==1:
+            price_max=df.High.iloc[-1]
+            price_min=df.Low.iloc[-1]
+        elif input_days==7:
+            price_max=df.High.iloc[-5:].max()
+            price_min=df.Low.iloc[-5:].min()
+
+        else:
+            import requests
+
+            cookies = {
+
+            }
+
+            headers = {
+                'authority': 'www.nseindia.com',
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'accept-language': 'en-US,en;q=0.9',
+                'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'document',
+                'sec-fetch-mode': 'navigate',
+                'sec-fetch-site': 'none',
+                'sec-fetch-user': '?1',
+                'upgrade-insecure-requests': '1',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+            }
+            
+            # initialize a session
+            session = requests.Session()
+            
+            # send a get request to the server
+            response = session.get('https://www.nseindia.com/',cookies=cookies,
+            headers=headers,)
+            # print the response dictionary
+            maincookie=(session.cookies.get_dict())
+
+            import requests
+
+            cookies = {
+                
+            }
+
+            headers = {
+                'authority': 'www.nseindia.com',
+                'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'accept-language': 'en-US,en;q=0.9',
+                'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'document',
+                'sec-fetch-mode': 'navigate',
+                'sec-fetch-site': 'none',
+                'sec-fetch-user': '?1',
+                'upgrade-insecure-requests': '1',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+            }
+            start=start_date1.strftime('%d-%m-%Y')
+            end=end_date1.strftime('%d-%m-%Y')
+            response = requests.get(f'https://www.nseindia.com/api/historical/cm/equity?symbol={option}&series=[%22EQ%22]&from={start}&to={end}',
+                cookies=maincookie,
+                headers=headers,
+            )
+
+
+            d=(response.json())
+            df=(pd.DataFrame(d['data']))
+                    
+            df['Date']=df['mTIMESTAMP']
+            df['Date']=pd.to_datetime(df['Date'])
+            df['High']=df['CH_TRADE_HIGH_PRICE'].astype(float)
+            df['Low']=df['CH_TRADE_LOW_PRICE'].astype(float)
+            df['Close']=df['CH_CLOSING_PRICE'].astype(float)
+            df['Open']=df['CH_OPENING_PRICE'].astype(float)
+            df['Symbol']=df['CH_SYMBOL']
+            df=df[['Date','Open','High','Low','Close','Symbol']]
+            df=df.iloc[::-1]
+            price_max=df.High.max()
+            price_min=df.Low.min()
+        st.write(f'High Price is {price_max}')
+        st.write(f'Low Price is {price_min}')
+
+
+
+        vix_bottom=vola365
+        price_bottom=price_max
+        monthly_vix_bottom=vix_bottom/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_bottom*price_bottom/100
+
+
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        bottoms=[price_bottom-i for i in vals]
+        mids_=[(bottoms[i]+bottoms[i-1])/2 for i in range(1,len(bottoms))]
+        mids=[0]
+        mids.extend(mids_)
+
+
+        df=pd.DataFrame()
+        df['Ratios']=fibs
+        df['Bottom']=bottoms
+        df['Bottom_Mids']=mids
+
+
+        #st.write(f'Low PriceRange is {monthly_price_range}')
+
+        vix_top=vola365
+        price_top=price_min
+        monthly_vix_top=vix_top/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_top*price_top/100
+        #st.write(f'High PriceRange is {monthly_price_range}')
+
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        tops=[price_top+i for i in vals]
+        mids_=[(tops[i]+tops[i-1])/2 for i in range(1,len(tops))]
+        mids=[0]
+        mids.extend(mids_)
+        df['Tops']=tops
+        df['Tops_Mids']=mids
+
+        
+        st.dataframe(df)
+    elif option1=='Index':
+        #dr=maindaydata()
+        if option=='NIFTY 50':
+            option11='INDIA VIX'
+
+            import requests
+
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Origin': 'https://www.niftyindices.com',
+                'Referer': 'https://www.niftyindices.com/reports/historical-data',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+            d= selected_date - relativedelta(months=1)
+            # Find the start date of the month
+            if input_days ==30:
+                start_date__1 = d.replace(day=1)
+
+                # Calculate the number of days in the month
+                days_in_month = (start_date__1.replace(month=start_date__1.month % 12 + 1, day=1) - timedelta(days=1)).day
+
+                # Find the end date of the month
+                end_date__1 = start_date__1.replace(day=days_in_month)
+
+                data_dict = {
+                    'name': option11,
+                    'startDate': start_date__1.strftime('%d-%b-%Y'),
+                    'endDate': end_date__1.strftime('%d-%b-%Y')
+                }
+            else:
+                data_dict = {
+                    'name': option11,
+                    'startDate': start_date1.strftime('%d-%b-%Y'),
+                    'endDate': end_date1.strftime('%d-%b-%Y')
+                }
+            data = json.dumps(data_dict)
+            response = requests.post(
+                'https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString',
+                headers=headers,
+                data=data,
+            )
+            f=response.json()
+            k=f['d']
+            k=k.replace('null','None')
+            df=pd.DataFrame(eval(k)[::-1])
+            #st.dataframe(df)
+            #print(df)
+            #df=dr[dr['Name']==option]
+            #df['Date']=pd.to_datetime(df['HistoricalDate'],dayfirst=True,yearfirst=False)
+            df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+
+            #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+            df['Close']=df['CLOSE'].astype(float)
+            df['Open']=df['OPEN'].astype(float)
+            df['High']=df['HIGH'].astype(float)
+            df['Low']=df['LOW'].astype(float)
+            df['Name']=df['INDEX_NAME']
+            df=df[['Date','Open','High','Low','Close','Name']]
+
+            vix_max=df.High.max()
+            vix_min=df.Low.min()
+
+
+            option='NIFTY 50'
+
+            import requests
+
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Origin': 'https://www.niftyindices.com',
+                'Referer': 'https://www.niftyindices.com/reports/historical-data',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+            data_dict = {
+                'name': option,
+                'startDate': start_date1.strftime('%d-%b-%Y'),
+                'endDate': end_date1.strftime('%d-%b-%Y')
+            }
+
+            data = json.dumps(data_dict)
+            response = requests.post(
+                'https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString',
+                headers=headers,
+                data=data,
+            )
+            f=response.json()
+            k=f['d']
+            k=k.replace('null','None')
+            df=pd.DataFrame(eval(k)[::-1])
+            #st.dataframe(df)
+            #df=dr[dr['Name']==option]
+            df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+            #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+            df['Close']=df['CLOSE'].astype(float)
+            df['Open']=df['OPEN'].astype(float)
+            df['High']=df['HIGH'].astype(float)
+            df['Low']=df['LOW'].astype(float)
+            df['Name']=df['INDEX_NAME']
+            df=df[['Date','Open','High','Low','Close','Name']]
+            if input_days==1:
+                price_max=df.High.iloc[-1]
+                price_min=df.Low.iloc[-1]
+            elif input_days==7:
+                price_max=df.High.iloc[-5:].max()
+                price_min=df.Low.iloc[-5:].min()
+            else:
+                option='NIFTY 50'
+
+                import requests
+
+                headers = {
+                    'Accept': 'application/json, text/javascript, */*; q=0.01',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Connection': 'keep-alive',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Origin': 'https://www.niftyindices.com',
+                    'Referer': 'https://www.niftyindices.com/reports/historical-data',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                }
+                data_dict = {
+                    'name': option,
+                    'startDate': start_date.strftime('%d-%b-%Y'),
+                    'endDate': end_date.strftime('%d-%b-%Y')
+                }
+
+                data = json.dumps(data_dict)
+                response = requests.post(
+                    'https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString',
+                    headers=headers,
+                    data=data,
+                )
+                f=response.json()
+                k=f['d']
+                k=k.replace('null','None')
+                df=pd.DataFrame(eval(k)[::-1])
+                #st.dataframe(df)
+                #df=dr[dr['Name']==option]
+                df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+                #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+                df['Close']=df['CLOSE'].astype(float)
+                df['Open']=df['OPEN'].astype(float)
+                df['High']=df['HIGH'].astype(float)
+                df['Low']=df['LOW'].astype(float)
+                df['Name']=df['INDEX_NAME']
+                df=df[['Date','Open','High','Low','Close','Name']]
+                price_max=df.High.max()
+                price_min=df.Low.min()
+
+
+            st.write(f'High Price is {price_max}')
+            st.write(f'Low Price is {price_min}')
+
+            vix_bottom=vix_max
+            price_bottom=price_max
+            monthly_vix_bottom=vix_bottom/math.sqrt(input_days)
+            monthly_price_range=monthly_vix_bottom*price_bottom/100
+
+
+            fibs=[1,1.272,1.618,2,2.618,4.237]
+            vals=[i*monthly_price_range for i in fibs]
+            bottoms=[price_bottom-i for i in vals]
+            mids_=[(bottoms[i]+bottoms[i-1])/2 for i in range(1,len(bottoms))]
+            mids=[0]
+            mids.extend(mids_)
+
+
+            df=pd.DataFrame()
+            df['Ratios']=fibs
+            df['Bottom']=bottoms
+            df['Bottom_Mids']=mids
+
+
+
+            #st.write(f'Low PriceRange is {monthly_price_range}')
+
+            vix_top=vix_min
+            price_top=price_min
+            monthly_vix_top=vix_top/math.sqrt(input_days)
+            monthly_price_range=monthly_vix_top*price_top/100
+            #st.write(f'High PriceRange is {monthly_price_range}')
+            fibs=[1,1.272,1.618,2,2.618,4.237]
+            vals=[i*monthly_price_range for i in fibs]
+            tops=[price_top+i for i in vals]
+            mids_=[(tops[i]+tops[i-1])/2 for i in range(1,len(tops))]
+            mids=[0]
+            mids.extend(mids_)
+            df['Tops']=tops
+            df['Tops_Mids']=mids
+            st.dataframe(df)
+
+
+        else:
+            import requests
+
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'Origin': 'https://www.niftyindices.com',
+                'Referer': 'https://www.niftyindices.com/reports/historical-data',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+            data_dict = {
+                'name': option,
+                'startDate': start_date1.strftime('%d-%b-%Y'),
+                'endDate': end_date1.strftime('%d-%b-%Y')
+            }
+
+            data = json.dumps(data_dict)
+            response = requests.post(
+                'https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString',
+                headers=headers,
+                data=data,
+            )
+            f=response.json()
+
+            df=pd.DataFrame(eval(f['d'])[::-1])
+            #df=dr[dr['Name']==option]
+            #st.dataframe(df)
+            df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+            #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+            df = df.sort_values(by='Date', ascending=True)
+            df['Close']=df['CLOSE'].astype(float)
+            df['Open']=df['OPEN'].astype(float)
+            df['High']=df['HIGH'].astype(float)
+            df['Low']=df['LOW'].astype(float)
+            df['Name']=df['INDEX_NAME']
+            df=df[['Date','Open','High','Low','Close','Name']]
+            df['DailyRange']=df['High']-df['Low']
+            df['avg']=(df['Open']+df['Close'])/2
+            df=df.iloc[-10:]
+            vola=(df['DailyRange'].mean()/df['avg'].mean())
+            vola100=vola*100
+            vola365=vola100*math.sqrt(365)
+
+            if input_days==1:
+                price_max=df.High.iloc[-1]
+                price_min=df.Low.iloc[-1]
+            elif input_days==7:
+                price_max=df.High.iloc[-5:].max()
+                price_min=df.Low.iloc[-5:].min()
+            else:
+                import requests
+
+                headers = {
+                    'Accept': 'application/json, text/javascript, */*; q=0.01',
+                    'Accept-Language': 'en-US,en;q=0.9',
+                    'Connection': 'keep-alive',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Origin': 'https://www.niftyindices.com',
+                    'Referer': 'https://www.niftyindices.com/reports/historical-data',
+                    'Sec-Fetch-Dest': 'empty',
+                    'Sec-Fetch-Mode': 'cors',
+                    'Sec-Fetch-Site': 'same-origin',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 OPR/100.0.0.0',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'sec-ch-ua': '"Not.A/Brand";v="8", "Chromium";v="114", "Opera GX";v="100"',
+                    'sec-ch-ua-mobile': '?0',
+                    'sec-ch-ua-platform': '"Windows"',
+                }
+                data_dict = {
+                    'name': option,
+                    'startDate': start_date.strftime('%d-%b-%Y'),
+                    'endDate': end_date.strftime('%d-%b-%Y')
+                }
+
+                data = json.dumps(data_dict)
+                response = requests.post(
+                    'https://www.niftyindices.com/Backpage.aspx/getHistoricaldatatabletoString',
+                    headers=headers,
+                    data=data,
+                )
+                f=response.json()
+
+                df=pd.DataFrame(eval(f['d'])[::-1])
+                #df=dr[dr['Name']==option]
+                #st.dataframe(df)
+                df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
+                #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+                df = df.sort_values(by='Date', ascending=True)
+                df['Close']=df['CLOSE'].astype(float)
+                df['Open']=df['OPEN'].astype(float)
+                df['High']=df['HIGH'].astype(float)
+                df['Low']=df['LOW'].astype(float)
+                df['Name']=df['INDEX_NAME']
+                df=df[['Date','Open','High','Low','Close','Name']]
+                price_max=df.High.max()
+                price_min=df.Low.min()
+            st.write(f'High Price is {price_max}')
+            st.write(f'Low Price is {price_min}')
+
+            vix_bottom=vola365
+            price_bottom=price_max
+            monthly_vix_bottom=vix_bottom/math.sqrt(input_days)
+            monthly_price_range=monthly_vix_bottom*price_bottom/100
+
+
+            fibs=[1,1.272,1.618,2,2.618,4.237]
+            vals=[i*monthly_price_range for i in fibs]
+            bottoms=[price_bottom-i for i in vals]
+            mids_=[(bottoms[i]+bottoms[i-1])/2 for i in range(1,len(bottoms))]
+            mids=[0]
+            mids.extend(mids_)
+
+
+            df=pd.DataFrame()
+            df['Ratios']=fibs
+            df['Bottom']=bottoms
+            df['Bottom_Mids']=mids
+
+
+
+
+            #st.write(f'Low PriceRange is {monthly_price_range}')
+
+            vix_top=vola365
+            price_top=price_min
+            monthly_vix_top=vix_top/math.sqrt(input_days)
+            monthly_price_range=monthly_vix_top*price_top/100
+            #st.write(f'High PriceRange is {monthly_price_range}')
+
+            fibs=[1,1.272,1.618,2,2.618,4.237]
+            vals=[i*monthly_price_range for i in fibs]
+            tops=[price_top+i for i in vals]
+            mids_=[(tops[i]+tops[i-1])/2 for i in range(1,len(tops))]
+            mids=[0]
+            mids.extend(mids_)
+            df['Tops']=tops
+            df['Tops_Mids']=mids
+
+            
+            st.dataframe(df)
+            
+    elif option1=='MCX':
+        #dr=maindaydata2(start_date,end_date)
+        import requests
+
+
+        headers = {
+            'Accept': 'application/json, text/javascript, */*; q=0.01',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
+            'Content-Type': 'application/json',
+            # 'Cookie': 'ASP.NET_SessionId=r1ozyozkyooxunf0tibiw222; device-referrer=https://www.google.com/; _gid=GA1.2.311038694.1694363277; device-source=https://www.mcxindia.com/#; _ga_8BQ43G0902=GS1.1.1694363277.2.1.1694365410.0.0.0; _ga=GA1.2.485484035.1694175674; _gat_gtag_UA_121835541_1=1',
+            'Origin': 'https://www.mcxindia.com',
+            'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
+            'Sec-Fetch-Dest': 'empty',
+            'Sec-Fetch-Mode': 'cors',
+            'Sec-Fetch-Site': 'same-origin',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+            'X-Requested-With': 'XMLHttpRequest',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+        }
+
+        data = {'Symbol':option,'Expiry':expiry,'FromDate':start_date1.strftime('%Y%m%d'),'ToDate':end_date1.strftime('%Y%m%d'),'InstrumentName':'ALL'}
+
+        response = requests.post(
+            'https://www.mcxindia.com/backpage.aspx/GetCommoditywiseBhavCopy',
+            cookies={},
+            headers=headers,
+            data=json.dumps(data),
+        )
+
+        df=pd.DataFrame(response.json()['d']['Data'])
+        df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)#.dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+        df['Symbol'] = df['Symbol'].str.strip()
+        df['Name']=df['Symbol']+df['ExpiryDate']
+        df['Open']=df['Open'].astype(float)
+        df['High']=df['High'].apply(float)
+        df['Low']=df['Low'].apply(float)
+        df['Close']=df['Close'].apply(float)
+        df=df[['Date','Open','High','Low','Close','Name','Symbol']]
+        df=df.iloc[::-1]
+        df=df.drop_duplicates()
+
+        
+        df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)
+        #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+        df = df.sort_values(by='Date', ascending=True)
+        df11=df
+        df['DailyRange']=df['High']-df['Low']
+        df['avg']=(df['Open']+df['Close'])/2
+        df=df.iloc[-10:]
+        #st.write(f'dailyavg mean is {df['DailyRange'].mean()}')
+        #st.dataframe(df)
+        #st.write(f'avg mean is {df['avg'].mean()}')
+        vola=(df['DailyRange'].mean()/df['avg'].mean())
+        vola100=vola*100
+        vola365=vola100*math.sqrt(365)
+        if input_days==1:
+            price_max=df.High.iloc[-1]
+            price_min=df.Low.iloc[-1]
+        elif input_days==7:
+            price_max=df.High.iloc[-5:].max()
+            price_min=df.Low.iloc[-5:].min()
+        else:
+            import requests
+
+
+            headers = {
+                'Accept': 'application/json, text/javascript, */*; q=0.01',
+                'Accept-Language': 'en-US,en;q=0.9',
+                'Connection': 'keep-alive',
+                'Content-Type': 'application/json',
+                # 'Cookie': 'ASP.NET_SessionId=r1ozyozkyooxunf0tibiw222; device-referrer=https://www.google.com/; _gid=GA1.2.311038694.1694363277; device-source=https://www.mcxindia.com/#; _ga_8BQ43G0902=GS1.1.1694363277.2.1.1694365410.0.0.0; _ga=GA1.2.485484035.1694175674; _gat_gtag_UA_121835541_1=1',
+                'Origin': 'https://www.mcxindia.com',
+                'Referer': 'https://www.mcxindia.com/market-data/bhavcopy',
+                'Sec-Fetch-Dest': 'empty',
+                'Sec-Fetch-Mode': 'cors',
+                'Sec-Fetch-Site': 'same-origin',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+                'X-Requested-With': 'XMLHttpRequest',
+                'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+            }
+
+            data = {'Symbol':option,'Expiry':expiry,'FromDate':start_date.strftime('%Y%m%d'),'ToDate':end_date.strftime('%Y%m%d'),'InstrumentName':'ALL'}
+
+            response = requests.post(
+                'https://www.mcxindia.com/backpage.aspx/GetCommoditywiseBhavCopy',
+                cookies={},
+                headers=headers,
+                data=json.dumps(data),
+            )
+
+            df=pd.DataFrame(response.json()['d']['Data'])
+            df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)#.dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+            df['Symbol'] = df['Symbol'].str.strip()
+            df['Name']=df['Symbol']+df['ExpiryDate']
+            df['Open']=df['Open'].astype(float)
+            df['High']=df['High'].apply(float)
+            df['Low']=df['Low'].apply(float)
+            df['Close']=df['Close'].apply(float)
+            df=df[['Date','Open','High','Low','Close','Name','Symbol']]
+            df=df.iloc[::-1]
+            price_max=df.High.max()
+            price_min=df.Low.min()
+
+        st.write(f'High Price is {price_max}')
+        st.write(f'Low Price is {price_min}')
+
+
+        vix_bottom=vola365
+        price_bottom=price_max
+        monthly_vix_bottom=vix_bottom/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_bottom*price_bottom/100
+
+
+
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        bottoms=[price_bottom-i for i in vals]
+        mids_=[(bottoms[i]+bottoms[i-1])/2 for i in range(1,len(bottoms))]
+        mids=[0]
+        mids.extend(mids_)
+
+
+        df=pd.DataFrame()
+        df['Ratios']=fibs
+        df['Bottom']=bottoms
+        df['Bottom_Mids']=mids
+
+
+
+
+        #st.write(f'Low PriceRange is {monthly_price_range}')
+
+        vix_top=vola365
+        price_top=price_min
+        monthly_vix_top=vix_top/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_top*price_top/100
+        #st.write(f'High PriceRange is {monthly_price_range}')
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        tops=[price_top+i for i in vals]
+        mids_=[(tops[i]+tops[i-1])/2 for i in range(1,len(tops))]
+        mids=[0]
+        mids.extend(mids_)
+        df['Tops']=tops
+        df['Tops_Mids']=mids
+
+        
+        st.dataframe(df)
+
+    
+
+    #st.dataframe(df)
+    #
+    elif option1=='CDS':
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            # 'cookie': 'defaultLang=en; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; _ga=GA1.1.1632056446.1694146307; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQxMzA3MSwiZXhwIjoxNjk0NDIwMjcxfQ.JOM8PC7cwUVZXqdV5AoWhoY6GYJeahOjP_MXXQZ_Z3s; AKA_A2=A; _ga_PJSKY6CFJH=GS1.1.1694412311.16.1.1694413071.59.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQZSdzaKHgM0uKAQAAkezjghVD7q8MmpuNfVKCm1OChebtjPo3+xJ4QhMJzLXU5tbI138YGsGnE58h+/C/YVd4/iM4d1xMdbtfj7xMQPlmXI7PErPNQRgugwK79JYkHdW0cZjiFtGvn9YxTTr2AIv3XxAReCS8xJJjsZoaot7BEo191/HldmreN4W59We/U9nM6+210CC4XxKuq/th6fLdAEAsmju8zZX+bGsY00g7N4LvZEd7hUDy/macfuDB+o/0FA==~1',
+            'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+
+        params = {
+            'from': start_date.strftime('%d-%m-%Y'),
+            'to': end_date.strftime('%d-%m-%Y'),
+            'instrumentType': 'FUTCUR',
+            'symbol': option,
+            'year': str(selected_date.year),
+            'expiryDate': expiry,
+        }
+
+        response = requests.get('https://www.nseindia.com/api/historical/cdCPV', params=params, cookies=maincookie, headers=headers)
+        d=response.json()
+        df=(pd.DataFrame(d['data']))
+                
+        df['Date']=df['CD_TIMESTAMP']
+        df['Date']=pd.to_datetime(df['Date'])
+        df['High']=df['CD_TRADE_HIGH_PRICE'].astype(float)*1000
+        df['Low']=df['CD_TRADE_LOW_PRICE'].astype(float)*1000
+        df['Close']=df['CD_CLOSING_PRICE'].astype(float)*1000
+        df['Open']=df['CD_OPENING_PRICE'].astype(float)*1000
+        df['Symbol']=df['CD_SYMBOL']
+        df=df[['Date','Open','High','Low','Close','Symbol']]
+        df=df.iloc[::-1]
+
+        df=df.drop_duplicates()
+
+        
+        df['Date']=pd.to_datetime(df['Date'],dayfirst=False,yearfirst=False)
+        #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
+        df = df.sort_values(by='Date', ascending=True)
+        df11=df
+        df['DailyRange']=df['High']-df['Low']
+        df['avg']=(df['Open']+df['Close'])/2
+        df=df.iloc[-10:]
+        #st.write(f'dailyavg mean is {df['DailyRange'].mean()}')
+        #st.dataframe(df)
+        #st.write(f'avg mean is {df['avg'].mean()}')
+        vola=(df['DailyRange'].mean()/df['avg'].mean())
+        vola100=vola*100
+        vola365=vola100*math.sqrt(365)
+        if input_days==1:
+            price_max=df.High.iloc[-1]
+            price_min=df.Low.iloc[-1]
+        elif input_days==7:
+            price_max=df.High.iloc[-5:].max()
+            price_min=df.Low.iloc[-5:].min()
+        else:
+            headers = {
+            'authority': 'www.nseindia.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            # 'cookie': 'defaultLang=en; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; _ga=GA1.1.1632056446.1694146307; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQxMzA3MSwiZXhwIjoxNjk0NDIwMjcxfQ.JOM8PC7cwUVZXqdV5AoWhoY6GYJeahOjP_MXXQZ_Z3s; AKA_A2=A; _ga_PJSKY6CFJH=GS1.1.1694412311.16.1.1694413071.59.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQZSdzaKHgM0uKAQAAkezjghVD7q8MmpuNfVKCm1OChebtjPo3+xJ4QhMJzLXU5tbI138YGsGnE58h+/C/YVd4/iM4d1xMdbtfj7xMQPlmXI7PErPNQRgugwK79JYkHdW0cZjiFtGvn9YxTTr2AIv3XxAReCS8xJJjsZoaot7BEo191/HldmreN4W59We/U9nM6+210CC4XxKuq/th6fLdAEAsmju8zZX+bGsY00g7N4LvZEd7hUDy/macfuDB+o/0FA==~1',
+            'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+
+            params = {
+                'from': start_date.strftime('%d-%m-%Y'),
+                'to': end_date.strftime('%d-%m-%Y'),
+                'instrumentType': 'FUTCUR',
+                'symbol': option,
+                'year': str(selected_date.year),
+                'expiryDate': expiry,
+            }
+
+            response = requests.get('https://www.nseindia.com/api/historical/cdCPV', params=params, cookies=maincookie, headers=headers)
+            d=response.json()
+            df=(pd.DataFrame(d['data']))
+                    
+            df['Date']=df['CD_TIMESTAMP']
+            df['Date']=pd.to_datetime(df['Date'])
+            df['High']=df['CD_TRADE_HIGH_PRICE'].astype(float)*1000
+            df['Low']=df['CD_TRADE_LOW_PRICE'].astype(float)*1000
+            df['Close']=df['CD_CLOSING_PRICE'].astype(float)*1000
+            df['Open']=df['CD_OPENING_PRICE'].astype(float)*1000
+            df['Symbol']=df['CD_SYMBOL']
+            df=df[['Date','Open','High','Low','Close','Symbol']]
+            df=df.iloc[::-1]
+            price_max=df.High.max()
+            price_min=df.Low.min()
+
+
+        st.write(f'High Price is {price_max}')
+        st.write(f'Low Price is {price_min}')
+        vix_bottom=vola365
+        price_bottom=price_max
+        monthly_vix_bottom=vix_bottom/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_bottom*price_bottom/100
+
+        
+
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        bottoms=[price_bottom-i for i in vals]
+        mids_=[(bottoms[i]+bottoms[i-1])/2 for i in range(1,len(bottoms))]
+        mids=[0]
+        mids.extend(mids_)
+
+
+        df=pd.DataFrame()
+        df['Ratios']=fibs
+        df['Bottom']=bottoms
+        df['Bottom_Mids']=mids
+
+
+
+
+        #st.write(f'Low PriceRange is {monthly_price_range}')
+
+        vix_top=vola365
+        price_top=price_min
+        monthly_vix_top=vix_top/math.sqrt(input_days)
+        monthly_price_range=monthly_vix_top*price_top/100
+        #st.write(f'High PriceRange is {monthly_price_range}')
+        fibs=[1,1.272,1.618,2,2.618,4.237]
+        vals=[i*monthly_price_range for i in fibs]
+        tops=[price_top+i for i in vals]
+        mids_=[(tops[i]+tops[i-1])/2 for i in range(1,len(tops))]
+        mids=[0]
+        mids.extend(mids_)
+        df['Tops']=tops
+        df['Tops_Mids']=mids
+
+        
+        st.dataframe(df)
+with tab4:
     
     
     #buys,sells=days1(end_date)
@@ -1649,7 +2581,9 @@ with tab3:
         df=pd.DataFrame(eval(f['d'])[::-1])
         #df=dr[dr['Name']==option]
         #st.dataframe(df)
-        df['Date']=pd.to_datetime(df['HistoricalDate'],dayfirst=True,yearfirst=False)
+        #df['Date']=pd.to_datetime(df['HistoricalDate'],dayfirst=True,yearfirst=False)
+        df['Date'] = pd.to_datetime(df['HistoricalDate'], format='%d %b %Y', dayfirst=True)
+
         df = df.sort_values(by='Date', ascending=True)
         #df = df[~df['Date'].dt.dayofweek.isin([5, 6])]
         df['Close']=df['CLOSE'].astype(float)
@@ -1702,9 +2636,97 @@ with tab3:
         df['Close']=df['Close'].apply(float)
         df=df[['Date','Open','High','Low','Close','Name','Symbol']]
         df=df.iloc[::-1]
+        #st.dataframe(df)
+    elif option1=='CDS':
+        headers = {
+            'authority': 'www.nseindia.com',
+            'accept': '*/*',
+            'accept-language': 'en-US,en;q=0.9',
+            # 'cookie': 'defaultLang=en; ak_bmsc=E5C0511535D7E8AFFB3120903EFBC9E7~000000000000000000000000000000~YAAQXydzaNh9a0mKAQAARhuKghU41sMB1ys0vToJEVMDI5c/ASIxBXXPLVp/1juGYJCBL3AzpFcpxJpOuUJwySLHYu7CS5Zea5g5v7O3uj3DYyq42oat2sM07t8Vi0v3bZYbr9RNLs0zAOhMk+L5xKxVNAznxV95DT3wR8/H00AhUWpi1Agm3yVOidyqe1r588pG/NCuNxMNnoL7AUhxiWhyjA36ZXl4IS6BmkPnKTT1wtVTjyAsnmIfgzImSsHZt6+lfm6ViKNImTfvqwOElYdrIpP/Z1gcKVQEMFApDGQpJmUB11QDlY/Ng7XfOTSAFodORsoa4Wl3Sh/isqTcDzH4QB2qzr8pWoUIuiT0aEwPm0wYFPkaH4aSMw9WwcYRWjla8nWHjowVFa9cX9kfXc/0V1qSvLjn1sBxx6WtwX11Ku2eIvEaTOeKoP9++q8NmPFw5SE8y3rmsi6kycT2IG63aIjrtCpBKzELef7R/67EXewbzopTOSxL17FLCkCeLQVHSw==; _gid=GA1.2.412291923.1694407207; nsit=DcGVOBs5rFJNtXEK8lC3Xorm; _ga=GA1.1.1632056446.1694146307; nseappid=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhcGkubnNlIiwiYXVkIjoiYXBpLm5zZSIsImlhdCI6MTY5NDQxMzA3MSwiZXhwIjoxNjk0NDIwMjcxfQ.JOM8PC7cwUVZXqdV5AoWhoY6GYJeahOjP_MXXQZ_Z3s; AKA_A2=A; _ga_PJSKY6CFJH=GS1.1.1694412311.16.1.1694413071.59.0.0; bm_sv=727C08A8A2C36DC06D41C86326369542~YAAQZSdzaKHgM0uKAQAAkezjghVD7q8MmpuNfVKCm1OChebtjPo3+xJ4QhMJzLXU5tbI138YGsGnE58h+/C/YVd4/iM4d1xMdbtfj7xMQPlmXI7PErPNQRgugwK79JYkHdW0cZjiFtGvn9YxTTr2AIv3XxAReCS8xJJjsZoaot7BEo191/HldmreN4W59We/U9nM6+210CC4XxKuq/th6fLdAEAsmju8zZX+bGsY00g7N4LvZEd7hUDy/macfuDB+o/0FA==~1',
+            'referer': 'https://www.nseindia.com/report-detail/cd_eq_security',
+            'sec-ch-ua': '"Not/A)Brand";v="99", "Opera GX";v="101", "Chromium";v="115"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36 OPR/101.0.0.0',
+        }
+
+        params = {
+            'from': start_date2.strftime('%d-%m-%Y'),
+            'to': end_date2.strftime('%d-%m-%Y'),
+            'instrumentType': 'FUTCUR',
+            'symbol': option,
+            'year': str(selected_date.year),
+            'expiryDate': expiry,
+        }
+
+        response = requests.get('https://www.nseindia.com/api/historical/cdCPV', params=params, cookies=maincookie, headers=headers)
+        d=response.json()
+        df=(pd.DataFrame(d['data']))
+                
+        df['Date']=df['CD_TIMESTAMP']
+        df['Date']=pd.to_datetime(df['Date'])
+        df['High']=df['CD_TRADE_HIGH_PRICE'].astype(float)*1000
+        df['Low']=df['CD_TRADE_LOW_PRICE'].astype(float)*1000
+        df['Close']=df['CD_CLOSING_PRICE'].astype(float)*1000
+        df['Open']=df['CD_OPENING_PRICE'].astype(float)*1000
+        df['Symbol']=df['CD_SYMBOL']
+        df=df[['Date','Open','High','Low','Close','Symbol']]
+        df=df.iloc[::-1]
     df = df.sort_values(by='Date', ascending=True)
     df11=df
     days1(selected_date)
+
+with tab5:
+    from dateutil import parser
+    import pandas as pd
+    year=selected_date.year
+    df=pd.read_html('https://www.timeanddate.com/moon/phases/india/mumbai?year={}'.format(year))[1]
+    df=df.iloc[:-1]
+
+    # Define a dictionary to map Hindi month names to their English counterparts
+    hindi_to_english_months = {
+        "जनवरी": "January",
+        "फरवरी": "February",
+        "मार्च": "March",
+        "अप्रैल": "April",
+        "मई": "May",
+        "जून": "June",
+        "जुलाई": "July",
+        "अगस्त": "August",
+        "सितंबर": "September",
+        "अक्टूबर": "October",
+        "नवंबर": "November",
+        "दिसंबर": "December"
+    }
+
+    # Convert the "Full Moon.1" column into standard date format
+    def convert_hindi_date(date_str):
+        if pd.notnull(date_str):
+            # Replace Hindi month names with English month names
+            for hindi_month, english_month in hindi_to_english_months.items():
+                date_str = date_str.replace(hindi_month, english_month)
+            # Parse the date
+            return parser.parse(date_str).strftime('%d-%B-%Y')
+        else:
+            return None
+    df["Full Moon"]=df["Full Moon"] +' '+str(year)
+    df["First Quarter"]=df["First Quarter"] +' '+str(year)
+    df["Third Quarter"]=df["Third Quarter"] +' '+str(year)
+    df["New Moon"]=df["New Moon"] +' '+str(year)
+
+    df["New Moon"] = df["New Moon"].apply(convert_hindi_date)
+    
+    df["First Quarter"] = df["First Quarter"].apply(convert_hindi_date)
+
+    df["Full Moon"] = df["Full Moon"].apply(convert_hindi_date)
+
+    df["Third Quarter"] = df["Third Quarter"].apply(convert_hindi_date)
+
+    df=df[['New Moon','First Quarter','Full Moon','Third Quarter']]
+    st.table(df)
 
 
 
